@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111318">
+  <meta name="description" content="Download VANTA Team Desk, a scrim journal and tactical playbook for VALORANT teams.">
+  <title>Download VANTA Team Desk</title>
+  <style>
+    :root { color-scheme: dark; font-family: "Segoe UI", Arial, sans-serif; background: #111318; color: #f3f4f6; }
+    * { box-sizing: border-box; }
+    body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 32px 20px; background: radial-gradient(ellipse at 50% 0, #23252d 0, #111318 58%); }
+    main { width: min(100%, 700px); }
+    .mark { display: inline-grid; width: 44px; height: 44px; place-items: center; border: 1px solid #ff5960; color: #ff5960; font-weight: 800; font-size: 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 800; letter-spacing: .12em; }
+    .eyebrow { margin: 64px 0 14px; color: #ff7378; font: 12px Consolas, monospace; letter-spacing: .14em; }
+    h1 { max-width: 620px; margin: 0; font-size: clamp(42px, 9vw, 76px); line-height: .98; letter-spacing: -.055em; }
+    h1 span { color: #ff5960; }
+    .intro { max-width: 570px; margin: 22px 0 28px; color: #b4b7c0; font-size: 17px; line-height: 1.65; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; padding: 0 20px; border: 1px solid #444650; border-radius: 5px; color: #f3f4f6; text-decoration: none; font-weight: 700; }
+    .button-primary { border-color: #ff5960; background: #ff5960; color: #15161a; }
+    .button-disabled { opacity: .5; cursor: not-allowed; }
+    .notice { margin-top: 32px; padding: 18px 20px; border: 1px solid #34363f; border-radius: 6px; background: #181a20; color: #c7c9cf; line-height: 1.6; }
+    .notice strong { color: #f3f4f6; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
+    .step { padding: 16px; border: 1px solid #2e3038; border-radius: 6px; color: #adb0b9; font-size: 14px; line-height: 1.5; }
+    .step b { display: block; margin-bottom: 8px; color: #ff7378; font: 12px Consolas, monospace; }
+    footer { margin-top: 30px; color: #777b86; font-size: 12px; }
+    @media (max-width: 560px) { .eyebrow { margin-top: 46px; } .steps { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand"><span class="mark">V</span><span>VANTA TEAM DESK</span></div>
+    <p class="eyebrow">VALORANT TEAM TOOL</p>
+    <h1>Review the scrim.<br><span>Win the next.</span></h1>
+    <p class="intro">A shared match log, team playbook, roster, and review space for your team. Install the Windows app and connect to your captain's team service.</p>
+    <div class="actions">
+      <a class="button button-primary {{DOWNLOAD_CLASS}}" href="{{DOWNLOAD_HREF}}" {{DOWNLOAD_DISABLED}}>Download for Windows</a>
+      <a class="button" href="#setup">How to get started</a>
+    </div>
+    <div class="notice {{DOWNLOAD_NOTICE_CLASS}}" role="status">{{DOWNLOAD_NOTICE}}</div>
+    <section id="setup" class="steps" aria-label="Getting started">
+      <div class="step"><b>01 / CAPTAIN</b>Deploy the service and database using the project's Render Blueprint.</div>
+      <div class="step"><b>02 / EVERYONE</b>Install the app and enter the same HTTPS service address.</div>
+      <div class="step"><b>03 / IN THE APP</b>Create an account. The captain creates the team; players request to join with its code.</div>
+    </section>
+    <footer>VANTA Team Desk is a team utility, not an in-game mod. No VALORANT data is read or automated.</footer>
+  </main>
+</body>
+</html>

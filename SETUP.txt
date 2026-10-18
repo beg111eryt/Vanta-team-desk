@@ -1,0 +1,3 @@
+1. Create an empty GitHub repo. In this folder's terminal run: git init -b main; git add .; git commit -m "Initial"; git remote add origin https://github.com/USER/REPO.git; git push -u origin main
+2. In Render choose New > Blueprint; select that repo and deploy render.yaml (PostgreSQL costs money). Then run: git tag v1.0.0; git push origin v1.0.0
+3. After GitHub Actions publishes, set Render DESKTOP_DOWNLOAD_URL to https://github.com/USER/REPO/releases/latest/download/VANTA-Team-Desk-Setup.exe. Install release\VANTA-Team-Desk-Setup.exe; enter your Render URL, create an account, then create your team.

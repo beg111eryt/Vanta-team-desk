@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: vanta-team-desk
+    runtime: node
+    plan: free
+    buildCommand: cd server && npm ci --omit=dev
+    startCommand: cd server && npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vanta-team-desk-db
+          property: connectionString
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: NODE_ENV
+        value: production
+
+databases:
+  - name: vanta-team-desk-db
+    databaseName: vanta_team_desk
+    user: vanta_team_desk
+    plan: basic-256mb
+    postgresMajorVersion: "16"

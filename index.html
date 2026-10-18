@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111318">
+  <meta name="description" content="A practical scrim journal and tactical playbook for your VALORANT team.">
+  <title>VANTA Team Desk</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="auth-screen" id="auth-screen">
+    <section class="auth-card" id="auth-content" aria-live="polite">
+      <p class="eyebrow"><span class="eyebrow-line"></span> VANTA TEAM DESK</p>
+      <h1>Connecting to your <span class="accent-text">team.</span></h1>
+    </section>
+  </main>
+
+  <div class="app-shell" id="app-shell" hidden>
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#dashboard" aria-label="VANTA Team Desk home">
+        <span class="brand-mark" id="team-mark">V</span>
+        <span class="brand-copy"><strong id="team-brand">VANTA</strong><small>TEAM DESK</small></span>
+      </a>
+
+      <p class="nav-label">WORKSPACE</p>
+      <nav class="nav-list">
+        <button class="nav-item active" data-view="dashboard" type="button">
+          <span class="nav-icon">⌂</span><span>Overview</span>
+        </button>
+        <button class="nav-item" data-view="matches" type="button">
+          <span class="nav-icon">▤</span><span>Match log</span><span class="nav-count" id="match-count">0</span>
+        </button>
+        <button class="nav-item" data-view="playbook" type="button">
+          <span class="nav-icon">⌘</span><span>Playbook</span><span class="nav-count" id="play-count">0</span>
+        </button>
+        <button class="nav-item" data-view="review" type="button">
+          <span class="nav-icon">↗</span><span>Team review</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-note">
+        <span class="live-dot"></span>
+        <div><strong>Team workspace</strong><small id="save-status">Saved on this device</small></div>
+      </div>
+      <button class="sidebar-link" id="demo-button" type="button">Explore demo workspace</button>
+      <div class="sidebar-footer">A team tool, not an in-game mod.</div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumb"><span id="brand-breadcrumb">VANTA</span><span class="crumb-slash">/</span><span id="current-section">Overview</span></div>
+        <div class="top-actions">
+          <span class="save-indicator"><span class="live-dot"></span> <span id="sync-label">Connecting</span></span>
+          <button class="button button-quiet" id="team-button" type="button">Team</button>
+          <button class="button button-quiet" id="server-settings-button" type="button">Server</button>
+          <button class="button button-quiet" id="import-button" type="button"><span aria-hidden="true">↥</span> Import</button>
+          <button class="button button-quiet" id="export-button" type="button"><span aria-hidden="true">↧</span> Share workspace</button>
+          <button class="button button-quiet" id="logout-button" type="button">Sign out</button>
+          <input id="import-file" type="file" accept="application/json,.json" hidden>
+        </div>
+      </header>
+
+      <section class="view active" id="view-dashboard" aria-labelledby="welcome-title">
+        <div class="page-heading heading-row">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> YOUR TEAM, IN ONE PLACE</p>
+            <h1 id="welcome-title">Make every round <span class="accent-text">count.</span></h1>
+            <p class="page-subtitle">A calmer way to prepare, learn from scrims, and keep your team's best ideas.</p>
+          </div>
+          <button class="button button-primary" id="quick-add-match" type="button"><span aria-hidden="true">＋</span> Log a match</button>
+        </div>
+
+        <div class="stat-grid" id="dashboard-stats"></div>
+
+        <div class="dashboard-grid">
+          <section class="panel recent-panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">THE LATEST</p><h2>Recent matches</h2></div>
+              <button class="text-button" data-navigate="matches" type="button">View match log <span aria-hidden="true">→</span></button>
+            </div>
+            <div id="recent-matches"></div>
+          </section>
+          <section class="panel focus-panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">KEEP GETTING BETTER</p><h2>Practice focus</h2></div>
+              <span class="panel-symbol">◎</span>
+            </div>
+            <div id="focus-summary"></div>
+            <div class="focus-footer">
+              <span class="live-dot"></span>
+              <span>Use the same focus labels after each scrim to spot patterns.</span>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel play-preview-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">READY WHEN YOU ARE</p><h2>From the playbook</h2></div>
+            <button class="text-button" data-navigate="playbook" type="button">Open playbook <span aria-hidden="true">→</span></button>
+          </div>
+          <div id="play-preview" class="play-preview-grid"></div>
+        </section>
+        <p class="disclaimer">VANTA Team Desk is an independent team planning tool. It does not connect to VALORANT or access game data.</p>
+      </section>
+
+      <section class="view" id="view-matches" aria-labelledby="matches-title">
+        <div class="page-heading heading-row">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> LEARN FROM THE LAST ONE</p>
+            <h1 id="matches-title">Match <span class="accent-text">log.</span></h1>
+            <p class="page-subtitle">Capture the result and one honest takeaway while the game is still fresh.</p>
+          </div>
+          <button class="button button-primary" id="add-match-button" type="button"><span aria-hidden="true">＋</span> Log a match</button>
+        </div>
+        <div class="match-toolbar">
+          <div class="filter-tabs" role="group" aria-label="Filter matches">
+            <button class="filter-tab selected" data-filter="all" type="button">All matches</button>
+            <button class="filter-tab" data-filter="win" type="button">Wins</button>
+            <button class="filter-tab" data-filter="draw" type="button">Draws</button>
+            <button class="filter-tab" data-filter="loss" type="button">Losses</button>
+          </div>
+          <span class="subtle-label" id="match-total"></span>
+        </div>
+        <div class="match-list" id="match-list"></div>
+        <p class="disclaimer">Match entries and selected players sync to your approved team members.</p>
+      </section>
+
+      <section class="view" id="view-playbook" aria-labelledby="playbook-title">
+        <div class="page-heading heading-row">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> GOOD IDEAS, REMEMBERED</p>
+            <h1 id="playbook-title">Team <span class="accent-text">playbook.</span></h1>
+            <p class="page-subtitle">Write down the setup, the cue, and the job each player owns.</p>
+          </div>
+          <button class="button button-primary" id="add-play-button" type="button"><span aria-hidden="true">＋</span> Add a play</button>
+        </div>
+        <div class="playbook-toolbar">
+          <label class="search-box"><span aria-hidden="true">⌕</span><span class="visually-hidden">Search plays</span><input id="play-search" type="search" placeholder="Search plays, maps, or agents"></label>
+          <select id="map-filter" class="select-control" aria-label="Filter playbook by map">
+            <option value="all">All maps</option>
+            <option>Ascent</option><option>Bind</option><option>Breeze</option><option>Fracture</option>
+            <option>Haven</option><option>Icebox</option><option>Lotus</option><option>Pearl</option>
+            <option>Split</option><option>Sunset</option><option>Other</option>
+          </select>
+        </div>
+        <div class="playbook-grid" id="playbook-list"></div>
+        <p class="disclaimer">Your team's playbook syncs to approved teammates. Agent picks are entered manually.</p>
+      </section>
+
+      <section class="view" id="view-review" aria-labelledby="review-title">
+        <div class="page-heading">
+          <p class="eyebrow"><span class="eyebrow-line"></span> SIGNAL OVER NOISE</p>
+          <h1 id="review-title">Team <span class="accent-text">review.</span></h1>
+          <p class="page-subtitle">A simple reflection on the matches you log. These are team notes, not a judgement.</p>
+        </div>
+        <div id="review-content"></div>
+        <p class="disclaimer">Focus win rates are descriptive only: a small log cannot establish that a focus area caused a result.</p>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-heading">
+        <div><p class="eyebrow" id="modal-eyebrow">TEAM DESK</p><h2 id="modal-title">Add to your workspace</h2></div>
+        <button class="icon-button" id="close-modal" type="button" aria-label="Close dialog">×</button>
+      </div>
+      <div id="modal-content"></div>
+    </section>
+  </div>
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>

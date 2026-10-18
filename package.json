@@ -1,0 +1,40 @@
+{
+  "name": "vanta-team-desk",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Desktop scrim journal and tactical playbook for VALORANT teams",
+  "main": "electron-main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "build": {
+    "appId": "com.vanta.teamdesk",
+    "productName": "VANTA Team Desk",
+    "asar": true,
+    "files": [
+      "electron-main.js",
+      "index.html",
+      "app.js",
+      "styles.css",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "nsis",
+      "artifactName": "VANTA-Team-Desk-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^44.9.0",
+    "electron-builder": "^26.15.3"
+  }
+}
