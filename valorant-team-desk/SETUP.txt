@@ -1,0 +1,86 @@
+VANTA TEAM DESK - FREE SETUP GUIDE
+
+WHAT YOU NEED
+- A free GitHub account and repository.
+- A Supabase Free project.
+- A Windows 10/11 64-bit computer for each user.
+- No paid server or custom domain is required. Free-plan limits and terms may change.
+
+1. CREATE AND CONFIGURE SUPABASE
+1. Create a Supabase project on the Free plan. Keep the database password private.
+2. Open Authentication > URL Configuration > Redirect URLs and add:
+   vantateamdesk://auth/callback
+3. Open supabase/schema.sql from this repository. Paste it into the project's SQL Editor and run it once.
+4. For Discord: open Authentication > Sign In / Providers > Discord and copy
+   the callback URL shown there, usually:
+   https://<your-project-ref>.supabase.co/auth/v1/callback
+   In discord.com/developers/applications create an application, open OAuth2,
+   add that Supabase callback under Redirects, and save. Copy its Client ID
+   and generate a Client Secret. Enable Discord in Supabase, paste the ID and
+   secret into its Discord provider settings, and save. No Discord bot is
+   needed for sign-in.
+5. In Supabase Authentication > URL Configuration > Redirect URLs, also allow:
+   vantateamdesk://auth/callback
+   Discord redirects back to Supabase; Supabase then redirects the desktop app.
+6. The app opens OAuth in your system browser and uses authorization-code/PKCE.
+   The Windows installer registers the vantateamdesk:// protocol. For local
+   development, use npm start to register it.
+7. Discord Client Secret belongs only in Supabase provider settings. The
+   Electron app does not load .env files. server/.env is obsolete configuration
+   for the removed server and is not used or packaged. Do not put OAuth secrets,
+   database passwords, or service-role keys in .env, in the app, or in GitHub.
+   In the app, enter only the Supabase Project URL and public anon/publishable
+   key.
+8. For Google instead, enable its provider and add the callback URL shown by
+   Supabase to the Google OAuth client. Add teammates as Google test users if
+   the consent screen is still in testing mode.
+9. Keep the project on Free and avoid paid add-ons. Supabase Free has quotas
+   and may pause projects after a week of inactivity; check current pricing.
+
+EMAIL SIGN-IN NOTE
+The app has email/password controls, but Supabase's default SMTP is restricted
+and rate-limited; it is not a general email service for team confirmations and
+password resets. Use Google or Discord unless you configure custom SMTP.
+Custom SMTP is not guaranteed to be free.
+
+2. INSTALL AND CONNECT
+1. Download VANTA-Team-Desk-Setup.exe from the GitHub Releases page and install.
+2. On the sign-in screen, enter the Supabase Project URL and public
+   anon/publishable key from the project's API settings.
+3. Never enter or publish the database password, service_role key, or another
+   secret key in the app, repository, or download website.
+4. Sign in with the OAuth provider you enabled. Create a team or enter the
+   32-character invite code from a team admin. New join requests need approval.
+5. Admins can assign roster roles, including Main roster, Main substitute,
+   Substitute, Tryout, or Coach. Admin permission is separate from roster role.
+
+3. PUBLISH THE WEBSITE AND INSTALLER FOR FREE
+1. From the repository root, check git status. Stage .github and
+   valorant-team-desk, then inspect the staged changes before committing and
+   pushing to main. Do not blindly stage .vscode or hs_err/replay log files.
+   Exclude .env files, database passwords, and service-role keys.
+2. In GitHub repository Settings > Pages, select GitHub Actions.
+   The workflow publishes valorant-team-desk/site.
+3. Check the GitHub repository links in site/index.html.
+4. Push a version tag such as v2.1.0. The release workflow builds the
+   Windows installer and attaches it to a GitHub Release.
+5. Share the GitHub Pages URL or Release page with your teammates. A custom
+   domain is optional.
+
+FEATURES AND DATA
+- Team profile, roster, approvals, availability, team chats, coach feedback,
+  and VOD links are shared through Supabase.
+- Scrim timer, map, round score, notes, match history, playbook, and appearance
+  are stored locally per team on each computer. Use export/import to exchange
+  these local records manually.
+- The app does not read VALORANT game data or collect player combat stats.
+- The installer is unsigned. Windows SmartScreen may warn users; only install
+  it when you trust the source.
+
+BUILD LOCALLY (OPTIONAL)
+Install Node.js 20 or newer. In PowerShell, from the app folder run:
+  npm ci
+  npm start
+To build the installer:
+  npm run dist
+Output: release\VANTA-Team-Desk-Setup.exe

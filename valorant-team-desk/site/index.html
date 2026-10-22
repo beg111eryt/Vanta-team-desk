@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111318">
+  <meta name="description" content="Download VANTA Team Desk, the scrim and team workspace for VALORANT squads.">
+  <title>VANTA Team Desk — Download</title>
+  <style>
+    :root { color-scheme: dark; --bg:#111318; --panel:#181b22; --line:#2a2e38; --text:#f1f2f4; --muted:#969ba7; --red:#ff4655; --soft:rgba(255,70,85,.12); }
+    * { box-sizing:border-box; }
+    body { min-width:320px; margin:0; background:var(--bg); color:var(--text); font:14px/1.6 "Segoe UI",Arial,sans-serif; }
+    a { color:inherit; }
+    .shell { width:min(1080px,calc(100% - 40px)); margin:0 auto; }
+    header { display:flex; height:78px; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); }
+    .brand { display:flex; align-items:center; gap:11px; text-decoration:none; }
+    .mark { display:grid; width:38px; height:38px; place-items:center; clip-path:polygon(0 0,100% 0,85% 100%,0 85%); background:var(--red); font-size:22px; font-weight:800; }
+    .brand-copy { display:grid; line-height:1.15; }
+    .brand-copy strong { font-size:15px; letter-spacing:.14em; }
+    .brand-copy small,.eyebrow { color:var(--muted); font-size:9px; letter-spacing:.18em; }
+    .repo-link { color:var(--muted); font-size:12px; text-decoration:none; }
+    .repo-link:hover { color:var(--text); }
+    .hero { display:grid; grid-template-columns:1.2fr .8fr; gap:46px; align-items:center; min-height:540px; padding:70px 0 62px; }
+    .eyebrow { margin:0 0 14px; color:#777d89; }
+    h1 { max-width:650px; margin:0; font-size:clamp(42px,7vw,72px); font-weight:600; letter-spacing:-.055em; line-height:1.02; }
+    .accent { color:var(--red); }
+    .intro { max-width:570px; margin:19px 0 25px; color:var(--muted); font-size:16px; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; }
+    .button { display:inline-flex; min-height:46px; align-items:center; justify-content:center; padding:0 17px; border:1px solid var(--line); border-radius:4px; color:var(--text); font-size:12px; font-weight:650; text-decoration:none; transition:background .15s,border-color .15s; }
+    .button.primary { border-color:var(--red); background:var(--red); color:white; }
+    .button:hover { border-color:var(--red); }
+    .button.primary:hover { background:#f15763; }
+    .requirements { display:flex; flex-wrap:wrap; gap:12px 18px; margin-top:19px; color:#777d89; font-size:10px; }
+    .preview { position:relative; min-height:290px; padding:15px; border:1px solid #363a44; border-radius:6px; background:linear-gradient(145deg,#1d2028,#14161c); box-shadow:0 26px 70px rgba(0,0,0,.32); transform:rotate(1.5deg); }
+    .preview-top { display:flex; gap:6px; padding-bottom:13px; border-bottom:1px solid #2a2e38; }
+    .preview-top i { width:7px; height:7px; border-radius:50%; background:#4c515b; }
+    .preview-body { display:grid; grid-template-columns:56px 1fr; gap:12px; padding-top:16px; }
+    .preview-nav { display:grid; align-content:start; gap:8px; }
+    .preview-nav span { height:8px; border-radius:2px; background:#292d37; }
+    .preview-nav span:first-child { background:var(--soft); }
+    .preview-content { display:grid; gap:9px; }
+    .preview-title { width:65%; height:12px; margin-bottom:4px; background:#555b67; }
+    .preview-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+    .preview-stats i,.preview-card { display:block; height:49px; border:1px solid #30343e; border-radius:3px; background:#1c2027; }
+    .preview-stats i:first-child { border-color:rgba(255,70,85,.35); }
+    .preview-card { height:79px; }
+    .feature-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; padding:0 0 58px; }
+    .feature { padding:17px; border:1px solid var(--line); border-radius:4px; background:var(--panel); }
+    .feature b { display:block; margin-bottom:6px; font-size:12px; }
+    .feature p { margin:0; color:var(--muted); font-size:11px; }
+    .notice { margin:0 0 58px; padding:15px 17px; border-left:2px solid var(--red); background:var(--panel); color:var(--muted); font-size:11px; }
+    footer { display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px; padding:20px 0 26px; border-top:1px solid var(--line); color:#777d89; font-size:10px; }
+    @media(max-width:760px) { .hero { grid-template-columns:1fr; gap:24px; min-height:0; padding:55px 0 38px; } .preview { min-height:235px; } .feature-grid { grid-template-columns:1fr; padding-bottom:32px; } .notice { margin-bottom:36px; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
+  </style>
+</head>
+<body>
+  <header class="shell">
+    <a class="brand" href="./" aria-label="VANTA Team Desk home"><span class="mark">V</span><span class="brand-copy"><strong>VANTA</strong><small>TEAM DESK</small></span></a>
+    <a class="repo-link" href="https://github.com/beg111eryt/Vanta-team-desk">Source &amp; releases ↗</a>
+  </header>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">PLAN THE WORK. PLAY THE ROUND.</p>
+        <h1>Make every round <span class="accent">count.</span></h1>
+        <p class="intro">One focused place for your roster, scrim notes, team availability, coaching feedback, VOD links, and team chat.</p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/beg111eryt/Vanta-team-desk/releases/latest/download/VANTA-Team-Desk-Setup.exe">Download for Windows</a>
+          <a class="button" href="https://github.com/beg111eryt/Vanta-team-desk/releases/latest">View all releases</a>
+        </div>
+        <div class="requirements"><span>Windows 10/11 · 64-bit</span><span>Free to install</span><span>Requires a team account</span></div>
+      </div>
+      <div class="preview" aria-hidden="true"><div class="preview-top"><i></i><i></i><i></i></div><div class="preview-body"><div class="preview-nav"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="preview-content"><i class="preview-title"></i><div class="preview-stats"><i></i><i></i><i></i></div><i class="preview-card"></i><i class="preview-card"></i></div></div></div>
+    </section>
+    <section class="feature-grid" aria-label="App features">
+      <article class="feature"><b>Keep the team in sync</b><p>Join requests, roster roles, admin tools, shared team chats, and an hourly availability planner.</p></article>
+      <article class="feature"><b>Coach with context</b><p>Coaches and admins can share feedback; main roster and main substitutes can post VOD links.</p></article>
+      <article class="feature"><b>Keep practice focused</b><p>Track scrim maps, round scores, timers, practice focus, and team takeaways.</p></article>
+    </section>
+    <p class="notice"><strong>Before you install:</strong> VANTA Team Desk connects to Supabase for account sign-in and team collaboration, which require an internet connection. Scrim notes and the practice tracker are local; the app does not read VALORANT game data or collect player combat stats. The Windows installer is currently unsigned, so Windows may show a SmartScreen warning.</p>
+  </main>
+  <footer class="shell"><span>VANTA Team Desk · Independent community tool</span><a href="https://github.com/beg111eryt/Vanta-team-desk">GitHub project</a><span>Not affiliated with Riot Games.</span></footer>
+</body>
+</html>

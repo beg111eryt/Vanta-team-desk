@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111318">
+  <meta name="description" content="A team workspace for scrims, players, coaching, and VOD review.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https: wss:; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <title>VANTA Team Desk</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.bundle.js" defer></script>
+</head>
+<body>
+  <section class="flow-screen opening-scene" id="opening-screen" aria-label="VANTA Team Desk opening">
+    <div class="opening-grain"></div>
+    <div class="opening-mark" aria-hidden="true">V</div>
+    <p class="eyebrow"><span class="eyebrow-line"></span> TEAM DESK</p>
+    <h1>Built around <span class="accent-text">your team.</span></h1>
+    <p>Prepare together. Review every round. Keep improving.</p>
+    <div class="opening-progress"><span></span></div>
+  </section>
+
+  <main class="flow-screen auth-screen" id="auth-screen" hidden>
+    <div class="flow-brand"><span class="brand-mark">V</span><span class="brand-copy"><strong>VANTA</strong><small>TEAM DESK</small></span></div>
+    <section class="flow-card">
+      <p class="eyebrow"><span class="eyebrow-line"></span> YOUR TEAM STARTS HERE</p>
+      <h1 id="auth-title">Welcome back.</h1>
+      <p class="page-subtitle" id="auth-subtitle">Sign in, or create an account to join your team.</p>
+      <div class="auth-mode-switch"><button type="button" data-auth-mode="signin" class="selected">Sign in</button><button type="button" data-auth-mode="signup">Create account</button></div>
+      <form id="auth-form" class="flow-form">
+        <p class="form-error" id="auth-error" hidden></p>
+        <label class="form-field signup-only" hidden><span>Display name</span><input class="form-control" name="displayName" maxlength="40" autocomplete="name" placeholder="How teammates know you"></label>
+        <label class="form-field"><span>Email</span><input class="form-control" name="email" type="email" maxlength="254" autocomplete="email" required placeholder="you@example.com"></label>
+        <label class="form-field"><span>Password</span><input class="form-control" name="password" type="password" minlength="8" maxlength="128" autocomplete="current-password" required placeholder="At least 8 characters"></label>
+        <button class="button button-primary flow-submit" id="auth-submit" type="submit">Sign in</button>
+      </form>
+      <section id="password-recovery-panel" hidden>
+        <p class="form-hint">Choose a new password for your account.</p>
+        <form id="password-recovery-form" class="flow-form">
+          <p class="form-error" id="reset-error" hidden></p>
+          <label class="form-field"><span>New password</span><input class="form-control" name="password" type="password" minlength="8" maxlength="128" autocomplete="new-password" required></label>
+          <button class="button button-primary flow-submit" type="submit">Save new password</button>
+          <button class="text-button" id="cancel-password-recovery" type="button">Return to sign in</button>
+        </form>
+      </section>
+      <button class="text-button reset-password-button" id="reset-password" type="button">Forgot password?</button>
+      <div class="auth-divider"><span>OR CONTINUE WITH</span></div>
+      <div class="auth-providers">
+        <button class="button button-quiet" data-provider="google" type="button"><span aria-hidden="true">G</span> Google</button>
+        <button class="button button-quiet" data-provider="discord" type="button"><span aria-hidden="true">◉</span> Discord</button>
+      </div>
+      <details class="connection-setup" id="connection-setup">
+        <summary>Connect to your team service</summary>
+        <p class="form-hint" id="connection-project" hidden></p>
+        <p class="form-hint">Enter the Supabase project URL and its public anon/publishable key. Never paste a service-role key or database password here.</p>
+        <form id="config-form" class="flow-form">
+          <label class="form-field"><span>Supabase project URL</span><input class="form-control" name="url" type="url" required placeholder="https://your-project.supabase.co"></label>
+          <label class="form-field"><span>Public anon/publishable key</span><input class="form-control" name="anonKey" type="password" required autocomplete="off" placeholder="sb_publishable_…"></label>
+          <button class="button button-quiet flow-submit" type="submit">Save connection</button>
+        </form>
+      </details>
+      <p class="form-hint riot-provider-note">Riot sign-in will be added after Riot OAuth approval is available.</p>
+    </section>
+    <p class="flow-legal">By using VANTA Team Desk, only share team codes and VOD links with people you trust.</p>
+  </main>
+
+  <main class="flow-screen team-choice-screen" id="team-choice-screen" hidden>
+    <header class="flow-topline"><div class="flow-brand"><span class="brand-mark">V</span><span class="brand-copy"><strong>VANTA</strong><small>TEAM DESK</small></span></div><button class="button button-quiet" id="flow-signout" type="button">Sign out</button></header>
+    <div class="flow-content">
+      <p class="eyebrow"><span class="eyebrow-line"></span> ONE ACCOUNT, ONE SQUAD AT A TIME</p>
+      <h1>Find your <span class="accent-text">team.</span></h1>
+      <p class="page-subtitle">Create a new team or join one with the private code from its admin.</p>
+      <div class="team-choice-grid">
+        <section class="flow-card">
+          <p class="eyebrow">START A SQUAD</p><h2>Create a team</h2>
+          <form id="create-team-form" class="flow-form">
+            <p class="form-error" id="team-error" hidden></p>
+            <label class="form-field"><span>Team name</span><input class="form-control" name="name" maxlength="48" required placeholder="e.g. VANTA"></label>
+            <div class="form-grid"><label class="form-field"><span>Team tag</span><input class="form-control" name="tag" maxlength="8" placeholder="VNT"></label><label class="form-field"><span>Region</span><select class="form-control" name="region"><option>Europe</option><option>North America</option><option>Asia Pacific</option><option>Brazil</option><option>Latin America</option><option>Korea</option><option>Other</option></select></label></div>
+            <label class="form-field"><span>About the team</span><textarea class="form-control" name="description" maxlength="500" placeholder="Goals, schedule, or what you are looking for"></textarea></label>
+            <label class="form-field"><span>Team picture <small class="optional">· optional, image up to 5 MB</small></span><input class="form-control" name="logo" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label>
+            <button class="button button-primary flow-submit" type="submit">Create team &amp; generate code</button>
+          </form>
+        </section>
+        <section class="flow-card join-team-card">
+          <p class="eyebrow">ALREADY HAVE A SQUAD?</p><h2>Join a team</h2>
+          <form id="join-team-form" class="flow-form">
+            <p class="form-error" id="join-error" hidden></p>
+            <label class="form-field"><span>32-character team code</span><input class="form-control team-code-input" name="code" minlength="32" maxlength="32" pattern="[A-Za-z0-9_-]{32}" autocomplete="off" spellcheck="false" required placeholder="Paste the code your team admin sent"></label>
+            <button class="button button-quiet flow-submit" type="submit">Request to join</button>
+          </form>
+          <p class="form-hint">Your request must be approved by a team admin before you can enter.</p>
+        </section>
+      </div>
+      <section class="flow-card new-team-code" id="created-team-code" hidden>
+        <p class="eyebrow">SAVE THIS PRIVATE INVITE</p><h2>Your team code</h2>
+        <p>Copy this 32-character code and send it to your teammates. It is shown only once.</p>
+        <div class="team-code-display"><code id="team-code-value"></code><button class="button button-quiet" id="copy-team-code" type="button">Copy code</button></div>
+        <button class="button button-primary flow-submit" id="continue-created-team" type="button">Continue to team</button>
+      </section>
+    </div>
+  </main>
+
+  <main class="flow-screen pending-screen" id="pending-screen" hidden>
+    <div class="flow-brand"><span class="brand-mark">V</span><span class="brand-copy"><strong>VANTA</strong><small>TEAM DESK</small></span></div>
+    <section class="flow-card pending-card"><span class="live-status"><i></i> REQUEST SENT</span><h1>Waiting for <span class="accent-text">approval.</span></h1><p class="page-subtitle">Your request to join <strong id="pending-team-name"></strong> is with the team admins. You can switch accounts or retry after they review it.</p><button class="button button-quiet" id="pending-refresh" type="button">Check again</button><button class="text-button" id="pending-signout" type="button">Sign out</button></section>
+  </main>
+
+  <main class="flow-screen team-picker-screen" id="team-picker-screen" hidden>
+    <div class="flow-brand"><span class="brand-mark">V</span><span class="brand-copy"><strong>VANTA</strong><small>TEAM DESK</small></span></div>
+    <section class="flow-card"><p class="eyebrow">YOUR TEAMS</p><h1>Choose your <span class="accent-text">workspace.</span></h1><div id="team-picker-list" class="team-picker-list"></div><button class="button button-quiet" id="picker-new-team" type="button">Create or join another team</button><button class="text-button" id="picker-signout" type="button">Sign out</button></section>
+  </main>
+
+  <div id="flow-toast" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="app-shell" id="app-shell" hidden>
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#dashboard" aria-label="VANTA Team Desk home">
+        <span class="brand-mark" id="team-mark">V</span>
+        <span class="brand-copy"><strong id="team-brand">VANTA</strong><small>TEAM DESK</small></span>
+      </a>
+
+      <p class="nav-label">WORKSPACE</p>
+      <nav class="nav-list">
+        <button class="nav-item active" data-view="dashboard" type="button">
+          <span class="nav-icon">⌂</span><span>Overview</span>
+        </button>
+        <button class="nav-item" data-view="matches" type="button">
+          <span class="nav-icon">▤</span><span>Match log</span><span class="nav-count" id="match-count">0</span>
+        </button>
+        <button class="nav-item" data-view="live" type="button">
+          <span class="nav-icon">●</span><span>Live scrim</span><span class="nav-count" id="live-indicator"></span>
+        </button>
+        <button class="nav-item" data-view="players" type="button">
+          <span class="nav-icon">♙</span><span>Players</span><span class="nav-count" id="player-count">0</span>
+        </button>
+        <button class="nav-item" data-view="availability" type="button">
+          <span class="nav-icon">▦</span><span>Availability</span>
+        </button>
+        <button class="nav-item" data-view="playbook" type="button">
+          <span class="nav-icon">⌘</span><span>Playbook</span><span class="nav-count" id="play-count">0</span>
+        </button>
+        <button class="nav-item" data-view="review" type="button">
+          <span class="nav-icon">↗</span><span>Team review</span>
+        </button>
+        <button class="nav-item" data-view="roster" type="button"><span class="nav-icon">♟</span><span>Team roster</span><span class="nav-count" id="pending-count"></span></button>
+        <button class="nav-item" data-view="coach" type="button"><span class="nav-icon">▣</span><span>Coach hub</span></button>
+        <button class="nav-item" data-view="chat" type="button"><span class="nav-icon">▰</span><span>Chats</span></button>
+      </nav>
+
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-note">
+        <span class="live-dot"></span>
+        <div><strong>Offline workspace</strong><small>Saved on this device</small></div>
+      </div>
+      <button class="sidebar-link" id="demo-button" type="button">Explore demo workspace</button>
+      <div class="sidebar-footer">A team tool, not an in-game mod.</div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumb"><span id="brand-breadcrumb">VANTA</span><span class="crumb-slash">/</span><span id="current-section">Overview</span></div>
+        <div class="top-actions">
+          <span class="team-name-pill" id="active-team-name">Team</span>
+          <button class="button button-quiet" id="switch-team-button" type="button">Switch team</button>
+          <button class="button button-quiet" id="team-signout-button" type="button">Sign out</button>
+          <span class="save-indicator"><span class="live-dot"></span> <span id="save-label">Saved on this device</span></span>
+          <button class="button button-quiet" id="import-button" type="button"><span aria-hidden="true">↥</span> Import</button>
+          <button class="button button-quiet" id="export-button" type="button"><span aria-hidden="true">↧</span> Export workspace</button>
+          <button class="button button-quiet" id="settings-button" type="button">Appearance</button>
+          <input id="import-file" type="file" accept="application/json,.json" hidden>
+        </div>
+      </header>
+
+      <section class="view active" id="view-dashboard" aria-labelledby="welcome-title">
+        <div class="page-heading heading-row">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> YOUR TEAM, IN ONE PLACE</p>
+            <h1 id="welcome-title">Make every round <span class="accent-text">count.</span></h1>
+            <p class="page-subtitle">A private, offline space to prepare, learn from scrims, and keep your team's best ideas.</p>
+          </div>
+          <button class="button button-primary" id="quick-add-match" type="button"><span aria-hidden="true">＋</span> Log a match</button>
+        </div>
+
+        <div class="stat-grid" id="dashboard-stats"></div>
+        <section class="panel quick-tools-panel">
+          <div class="panel-heading"><div><p class="eyebrow">NEXT SCRIM</p><h2>Get the team ready</h2></div><button class="button button-primary" id="start-live-button" type="button">Start live tracker</button></div>
+          <p class="page-subtitle">Track the map, round score, and team takeaway. The tracker is not connected to the game.</p>
+        </section>
+
+        <div class="dashboard-grid">
+          <section class="panel recent-panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">THE LATEST</p><h2>Recent matches</h2></div>
+              <button class="text-button" data-navigate="matches" type="button">View match log <span aria-hidden="true">→</span></button>
+            </div>
+            <div id="recent-matches"></div>
+          </section>
+          <section class="panel focus-panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">KEEP GETTING BETTER</p><h2>Practice focus</h2></div>
+              <span class="panel-symbol">◎</span>
+            </div>
+            <div id="focus-summary"></div>
+            <div class="focus-footer">
+              <span class="live-dot"></span>
+              <span>Use the same focus labels after each scrim to spot patterns.</span>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel play-preview-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">READY WHEN YOU ARE</p><h2>From the playbook</h2></div>
+            <button class="text-button" data-navigate="playbook" type="button">Open playbook <span aria-hidden="true">→</span></button>
+          </div>
+          <div id="play-preview" class="play-preview-grid"></div>
+        </section>
+        <p class="disclaimer">VANTA Team Desk is an independent team planning tool. It does not connect to VALORANT or access game data.</p>
+      </section>
+
+      <section class="view" id="view-live" aria-labelledby="live-title">
+        <div class="page-heading heading-row">
+          <div><p class="eyebrow"><span class="eyebrow-line"></span> SCRIM SIDEKICK</p><h1 id="live-title">Live <span class="accent-text">tracker.</span></h1><p class="page-subtitle">Keep the round score, timer, and a team takeaway together.</p></div>
+          <button class="button button-primary" id="new-live-button" type="button">Start a scrim</button>
+        </div>
+        <div id="live-panel"></div>
+        <p class="disclaimer">Record the map, score, and notes yourself; this tracker does not connect to VALORANT.</p>
+      </section>
+
+      <section class="view" id="view-players" aria-labelledby="players-title">
+        <div class="page-heading heading-row">
+          <div><p class="eyebrow"><span class="eyebrow-line"></span> PEOPLE BEHIND THE PLAYS</p><h1 id="players-title">Player <span class="accent-text">profiles.</span></h1><p class="page-subtitle">Track roles, agents, goals, and notes for each player.</p></div>
+          <button class="button button-primary" id="add-player-button" type="button">Add player</button>
+        </div>
+        <div class="player-grid" id="players-panel"></div>
+      </section>
+
+      <section class="view" id="view-availability" aria-labelledby="availability-title">
+        <div class="page-heading">
+          <p class="eyebrow"><span class="eyebrow-line"></span> FIND A TIME THAT WORKS</p>
+          <h1 id="availability-title">Team <span class="accent-text">availability.</span></h1>
+          <p class="page-subtitle">Set weekly availability by player. Each square is one hour; select a player to update their schedule.</p>
+        </div>
+        <div id="availability-panel"></div>
+        <p class="disclaimer">This offline calendar is stored on this computer. Share a workspace export with teammates to exchange schedule updates; there is no automatic cross-device sync.</p>
+      </section>
+
+      <section class="view" id="view-matches" aria-labelledby="matches-title">
+        <div class="page-heading heading-row">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> LEARN FROM THE LAST ONE</p>
+            <h1 id="matches-title">Match <span class="accent-text">log.</span></h1>
+            <p class="page-subtitle">Capture the result and one honest takeaway while the game is still fresh.</p>
+          </div>
+          <button class="button button-primary" id="add-match-button" type="button"><span aria-hidden="true">＋</span> Log a match</button>
+        </div>
+        <div class="match-toolbar">
+          <div class="filter-tabs" role="group" aria-label="Filter matches">
+            <button class="filter-tab selected" data-filter="all" type="button">All matches</button>
+            <button class="filter-tab" data-filter="win" type="button">Wins</button>
+            <button class="filter-tab" data-filter="draw" type="button">Draws</button>
+            <button class="filter-tab" data-filter="loss" type="button">Losses</button>
+          </div>
+          <span class="subtle-label" id="match-total"></span>
+        </div>
+        <div class="match-list" id="match-list"></div>
+        <p class="disclaimer">Match entries are saved locally on this device. Export a workspace file to share or back it up.</p>
+      </section>
+
+      <section class="view" id="view-playbook" aria-labelledby="playbook-title">
+        <div class="page-heading heading-row">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> GOOD IDEAS, REMEMBERED</p>
+            <h1 id="playbook-title">Team <span class="accent-text">playbook.</span></h1>
+            <p class="page-subtitle">Write down the setup, the cue, and the job each player owns.</p>
+          </div>
+          <button class="button button-primary" id="add-play-button" type="button"><span aria-hidden="true">＋</span> Add a play</button>
+        </div>
+        <div class="playbook-toolbar">
+          <label class="search-box"><span aria-hidden="true">⌕</span><span class="visually-hidden">Search plays</span><input id="play-search" type="search" placeholder="Search plays, maps, or agents"></label>
+          <select id="map-filter" class="select-control" aria-label="Filter playbook by map">
+            <option value="all">All maps</option>
+            <option>Ascent</option><option>Bind</option><option>Breeze</option><option>Fracture</option>
+            <option>Haven</option><option>Icebox</option><option>Lotus</option><option>Pearl</option>
+            <option>Split</option><option>Sunset</option><option>Other</option>
+          </select>
+        </div>
+        <div class="playbook-grid" id="playbook-list"></div>
+        <p class="disclaimer">Playbook entries are saved on this device. Export your workspace to share the plan manually. Agent picks are entered manually.</p>
+      </section>
+
+      <section class="view" id="view-review" aria-labelledby="review-title">
+        <div class="page-heading">
+          <p class="eyebrow"><span class="eyebrow-line"></span> SIGNAL OVER NOISE</p>
+          <h1 id="review-title">Team <span class="accent-text">review.</span></h1>
+          <p class="page-subtitle">A simple reflection on the matches you log. These are team notes, not a judgement.</p>
+        </div>
+        <div id="review-content"></div>
+        <p class="disclaimer">Focus win rates are descriptive only: a small log cannot establish that a focus area caused a result.</p>
+      </section>
+
+      <section class="view" id="view-roster" aria-labelledby="roster-title">
+        <div class="page-heading heading-row"><div><p class="eyebrow"><span class="eyebrow-line"></span> YOUR SQUAD, YOUR CALL</p><h1 id="roster-title">Team <span class="accent-text">roster.</span></h1><p class="page-subtitle">Manage member requests, roles, and team admins.</p></div><button class="button button-quiet" id="team-code-button" type="button">Generate invite code</button></div>
+        <div id="roster-content"></div>
+      </section>
+
+      <section class="view" id="view-coach" aria-labelledby="coach-title">
+        <div class="page-heading"><p class="eyebrow"><span class="eyebrow-line"></span> REVIEW WITH INTENT</p><h1 id="coach-title">Coach <span class="accent-text">hub.</span></h1><p class="page-subtitle">Coaches and admins can leave feedback. Main roster and main substitutes can share VOD links.</p></div>
+        <div id="coach-content"></div>
+      </section>
+
+      <section class="view" id="view-chat" aria-labelledby="chat-title">
+        <div class="page-heading"><p class="eyebrow"><span class="eyebrow-line"></span> KEEP THE COMMS CLEAR</p><h1 id="chat-title">Team <span class="accent-text">chats.</span></h1><p class="page-subtitle">Global chat is for English conversation. Team chats follow roster and admin roles.</p></div>
+        <div id="chat-content"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-heading">
+        <div><p class="eyebrow" id="modal-eyebrow">TEAM DESK</p><h2 id="modal-title">Add to your workspace</h2></div>
+        <button class="icon-button" id="close-modal" type="button" aria-label="Close dialog">×</button>
+      </div>
+      <div id="modal-content"></div>
+    </section>
+  </div>
+
+  <div class="team-code-modal" id="team-code-modal" hidden>
+    <section class="flow-card" role="dialog" aria-modal="true" aria-labelledby="team-code-modal-title">
+      <button class="icon-button team-code-modal-close" id="close-team-code" type="button" aria-label="Close dialog">×</button>
+      <p class="eyebrow">PRIVATE TEAM INVITE</p><h2 id="team-code-modal-title">New team code</h2>
+      <p class="form-hint">Generating a new code replaces the previous code. Only share it with people you want to invite.</p>
+      <div class="team-code-display"><code id="new-team-code-value"></code><button class="button button-quiet" id="copy-new-team-code" type="button">Copy code</button></div>
+    </section>
+  </div>
+
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>

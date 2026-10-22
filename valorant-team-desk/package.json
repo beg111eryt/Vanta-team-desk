@@ -1,0 +1,52 @@
+{
+  "name": "vanta-team-desk",
+  "version": "2.1.0",
+  "private": true,
+  "description": "Team workspace for VALORANT rosters, scrims, coaching, and chat",
+  "main": "electron-main.js",
+  "scripts": {
+    "build:app": "esbuild team.js --bundle --platform=browser --format=iife --target=chrome120 --outfile=app.bundle.js",
+    "start": "npm run build:app && electron .",
+    "dist": "npm run build:app && electron-builder --win nsis"
+  },
+  "build": {
+    "appId": "com.vanta.teamdesk",
+    "productName": "VANTA Team Desk",
+    "asar": true,
+    "files": [
+      "electron-main.js",
+      "electron-preload.js",
+      "index.html",
+      "app.bundle.js",
+      "styles.css",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "nsis",
+      "artifactName": "VANTA-Team-Desk-Setup.${ext}"
+    },
+    "protocols": [
+      {
+        "name": "VANTA Team Desk sign-in",
+        "schemes": ["vantateamdesk"]
+      }
+    ],
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^44.9.0",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.28.2"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.118.0"
+  }
+}
