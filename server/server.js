@@ -26,7 +26,10 @@ if (!DATABASE_URL) {
 
 if (PRODUCTION) app.set("trust proxy", 1);
 
-const pool = new Pool({ connectionString: DATABASE_URL });
+const pool = new Pool({
+  connectionString: DATABASE_URL,
+  max: process.env.VERCEL ? 1 : 10
+});
 pool.on("error", error => {
   console.error("Unexpected PostgreSQL pool error:", error);
 });
@@ -37,9 +40,20 @@ const sessionStore = new PgSession({
   tableName: "team_desk_sessions"
 });
 const scrypt = promisify(crypto.scrypt);
-const clientPath = path.resolve(__dirname, "..");
+const clientPath = __dirname;
 const schema = fs.readFileSync(path.join(__dirname, "schema.sql"), "utf8");
 const authAttempts = new Map();
+let schemaInitialization;
+
+function ensureSchema() {
+  if (!schemaInitialization) {
+    schemaInitialization = pool.query(schema).catch(error => {
+      schemaInitialization = null;
+      throw error;
+    });
+  }
+  return schemaInitialization;
+}
 
 function desktopDownloadUrl() {
   const configuredUrl = process.env.DESKTOP_DOWNLOAD_URL;
@@ -68,6 +82,11 @@ app.use((req, res, next) => {
   if (!req.body || typeof req.body !== "object" || Array.isArray(req.body)) req.body = {};
   next();
 });
+app.use("/api", requireSameOrigin);
+app.use("/api", asyncRoute(async (req, res, next) => {
+  await ensureSchema();
+  next();
+}));
 app.use(session({
   name: "vanta.teamdesk",
   store: sessionStore,
@@ -240,8 +259,6 @@ function validateWorkspace(body, rosterIds) {
     }
   }
 }
-
-app.use("/api", requireSameOrigin);
 
 app.get("/api/health", asyncRoute(async (req, res) => {
   await pool.query("SELECT 1");
@@ -496,13 +513,17 @@ app.use((error, req, res, next) => {
 });
 
 async function start() {
-  await pool.query(schema);
+  await ensureSchema();
   app.listen(PORT, () => {
     console.log(`VANTA Team Desk running on http://localhost:${PORT}`);
   });
 }
 
-start().catch(error => {
-  console.error("Unable to start VANTA Team Desk:", error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  start().catch(error => {
+    console.error("Unable to start VANTA Team Desk:", error);
+    process.exitCode = 1;
+  });
+}
+
+module.exports = app;

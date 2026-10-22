@@ -38,7 +38,17 @@ Choose Single map, BO1, BO2, BO3, or BO5. Single-map entries use round scores; b
 
 Deploy the `server` app with a PostgreSQL database and serve it over HTTPS. Set `DATABASE_URL`, a unique random `SESSION_SECRET`, `NODE_ENV=production`, and the hosting platform's `PORT`. Keep the web interface and `/api` on the same origin so the secure session cookie works. Back up the PostgreSQL database; local browser backups are not a substitute for a server backup.
 
-For Render, push this project directory as a GitHub repository and create a Blueprint from `render.yaml`. It creates the web service and PostgreSQL database; the database plan can incur charges. The service URL hosts a small download page and is the address desktop users enter. It is not a team name or team code.
+### Deploy to Vercel
+
+Import this repository into Vercel and set the project's **Root Directory** to `server` (the folder containing `server.js`, `package.json`, and `vercel.json`). Vercel deploys the Express app as a serverless function in Frankfurt (`fra1`). Add these environment variables in the Vercel project settings for Production and Preview as needed:
+
+- `DATABASE_URL`: the full PostgreSQL connection URL reachable over the public internet from Vercel. A Render **internal** database URL only works within Render; if using a Render database, use its external connection URL and ensure external connections are enabled. A serverless PostgreSQL provider is another option.
+- `SESSION_SECRET`: a unique random value of at least 32 characters. Generate one with `node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"`.
+- `NODE_ENV`: `production`.
+
+Do not upload `.env` or commit database credentials. After setting the variables, redeploy and check `https://<your-project>.vercel.app/api/health`; it should return `{"ok":true}`. Use the same Vercel URL in the desktop app. Vercel functions initialize the database schema on the first API request, so the database must be reachable then.
+
+For Render, push this project directory as a GitHub repository and create a Blueprint from `render.yaml`. It creates the web service and PostgreSQL database; the database plan can incur charges. The Blueprint runs the API from `server` (not the Electron desktop entry point). If creating a web service manually instead, set **Root Directory** to `server`, **Build Command** to `npm ci --omit=dev`, and **Start Command** to `npm start`; do not run `node electron-main.js`. The service URL hosts a small download page and is the address desktop users enter. It is not a team name or team code.
 
 Push a version tag such as `v1.0.0` to run the GitHub Actions release workflow; it builds and publishes `VANTA-Team-Desk-Setup.exe`. Then set the Render service's `DESKTOP_DOWNLOAD_URL` environment variable to `https://github.com/OWNER/REPOSITORY/releases/latest/download/VANTA-Team-Desk-Setup.exe`. The website's Download button redirects to that asset. If the setting is empty, the page explains that the installer has not been published.
 

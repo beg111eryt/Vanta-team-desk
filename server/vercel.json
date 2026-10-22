@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "server.js": {
+      "regions": ["fra1"]
+    }
+  }
+}
